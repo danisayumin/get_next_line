@@ -14,12 +14,15 @@
 
 char	*get_next_line(const int fd)
 {
-	int line 
-	
-	line = read(fd, void *buf, size_t nbyte);
-	while (/* condition */)
+	int	line 
+	char	*buf;
+
+	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	while (line > 0)
 	{
-		/* code */
+		line = read(fd, buf, BUFFER_SIZE);
+		buf[line] = '\0';
+		//coloca uma join aq e retorna a linha e o buf fazer um tratamento de erro
 	}
 	return ();
 }
