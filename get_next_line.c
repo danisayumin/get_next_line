@@ -12,49 +12,73 @@
 
 #include	"get_next_line.h"
 
-static char	*line_break(int fd, char *rest_line, char *buf)
+static char	*line_break(int fd, char *buf, char *remainder);
+static int	find_break_line(char *buf);
+char	*get_next_line(const int fd);
+
+static char	*line_break(int fd, char *buf, char *remainder)
 {
 	int		bytes;
-	char	*temp;
-	char	*storage;
+	int		break_line;
 
-	bytes = 1;
 	while (1)
 	{
-		bytes = read(fd, rest_line, BUFFER_SIZE);
+		bytes = read(fd, buf, BUFFER_SIZE);
 		if (bytes == -1)
 			return (NULL);
 		else if (bytes == 0)
 			break ;
 		buf[bytes] = '\0';
-		if (!storage)
-			storage = ft_strdup("");
-		temp = storage;
-		storage = ft_strjoin(temp, buf);
-		free(temp);
-		if (ft_strchr(storage, '\n'))
-			break ;
+		break_line = find_break_line(buf);
+		if (break_line != -1)
+		{
+			ft_strncpy(remainder, &buf[break_line + 1], BUFFER_SIZE - break_line);
+			return (buf);
+		}
+		
 	}
+	return (buf);
+}
+
+static int	find_break_line(char *buf)
+{
+	int	i;
+
+	i = 0;
+	while (buf[i] != '\0')
+	{
+		if (buf[i] == '\n')
+			return (i);
+		i++;
+	}
+	return (-1);
 }
 
 char	*get_next_line(const int fd)
 {
 	char		*line;
 	char		*buf;
-	static char	*rest_line;
+	static char		*remainder;
+	size_t		len;
 
+	line = NULL;	
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf)
+	remainder = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buf || !remainder)
+	{
+		free(buf);
+		free(remainder);
 		return (NULL);
-	line = line_break(fd, rest_line, buf);
-	free(buf);
+	}
+	line = line_break(fd, buf, remainder);
 	return (line);
 }
 
 #include <fcntl.h>
 #include <stdio.h>
+
 int main()
 {
     int fd;
@@ -68,7 +92,6 @@ int main()
 		printf("%s\n", line);
         free(line);
 	}
-
     close(fd);
     return 0;
 }

@@ -40,13 +40,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (!new_str)
 		return (NULL);
 	while (*s1)
-	{
 		new_str[i++] = *s1++;
-	}
 	while (*s2)
-	{
 		new_str[i++] = *s2++;
-	}
 	new_str[i] = '\0';
 	return (new_str);
 }
@@ -85,4 +81,22 @@ char	*ft_strdup(const char *s)
 	}
 	str[i] = '\0';
 	return (str);
+}
+
+char	*ft_strncpy(char *dest, char *src, unsigned int n)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (i < n && src[i] != '\0' )
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	while (i < n)
+	{
+		dest[i] = '\0';
+		i++;
+	}
+	return (dest);
 }

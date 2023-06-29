@@ -20,6 +20,8 @@ char	*get_next_line(const int fd);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s);
+char	*ft_strncpy(char *dest, char *src, unsigned int n);
+size_t	ft_strlen(const char *s);
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
