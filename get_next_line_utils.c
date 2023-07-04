@@ -24,26 +24,29 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+static char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*new_str;
-	size_t	len_s1;
-	size_t	len_s2;
 	int		i;
+	int		j;
+	char	*new_str;
 
-	if (s1 == NULL || s2 == NULL)
-		return (NULL);
-	i = 0;
-	len_s1 = ft_strlen(s1);
-	len_s2 = ft_strlen(s2) + 1;
-	new_str = malloc(sizeof(char) * (len_s1 + len_s2));
+	new_str = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1)
+			* sizeof(char));
 	if (!new_str)
 		return (NULL);
-	while (*s1)
-		new_str[i++] = *s1++;
-	while (*s2)
-		new_str[i++] = *s2++;
-	new_str[i] = '\0';
+	i = 0;
+	while (s1[i] != '\0')
+	{
+		new_str[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (s2[j] != '\0')
+	{
+		new_str[i + j] = s2[j];
+		j++;
+	}
+	new_str[i + j] = '\0';
 	return (new_str);
 }
 
@@ -81,22 +84,4 @@ char	*ft_strdup(const char *s)
 	}
 	str[i] = '\0';
 	return (str);
-}
-
-char	*ft_strncpy(char *dest, char *src, unsigned int n)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (i < n && src[i] != '\0' )
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	while (i < n)
-	{
-		dest[i] = '\0';
-		i++;
-	}
-	return (dest);
 }

@@ -13,14 +13,31 @@
 #include	"get_next_line.h"
 
 static char	*line_break(int fd, char *buf, char *remainder);
-static int	find_break_line(char *buf);
+static char	find_break_line(char *buf);
 char	*get_next_line(const int fd);
 
 static char	*line_break(int fd, char *buf, char *remainder)
 {
 	int		bytes;
-	int		break_line;
+	char	*temp;
 
+	bytes = 0;
+	// while (1)
+	// {
+	// 	bytes = read(fd, buf, BUFFER_SIZE);
+	// 	if (bytes == -1)
+	// 		return (NULL);
+	// 	else if (bytes == 0)
+	// 		break ;
+	// 	buf[bytes] = '\0';
+	// 	break_line = find_break_line(buf);
+	// 	if (break_line != -1)
+	// 	{
+	// 		ft_strncpy(remainder, &buf[break_line + 1], BUFFER_SIZE - break_line);
+	// 		return (buf);
+	// 	}
+	// }
+	// return (buf);
 	while (1)
 	{
 		bytes = read(fd, buf, BUFFER_SIZE);
@@ -29,51 +46,52 @@ static char	*line_break(int fd, char *buf, char *remainder)
 		else if (bytes == 0)
 			break ;
 		buf[bytes] = '\0';
-		break_line = find_break_line(buf);
-		if (break_line != -1)
-		{
-			ft_strncpy(remainder, &buf[break_line + 1], BUFFER_SIZE - break_line);
-			return (buf);
-		}
-		
+		if (!buf)
+			buf = ft_strdup("");
+		temp = buf;
+		buf = ft_strjoin(buf, remainder);
+		free(temp);
+		if (ft_strchr(buf, '\n'))
+			break ;
 	}
 	return (buf);
 }
 
-static int	find_break_line(char *buf)
+static char	*ft_split_line(char *line)
 {
-	int	i;
+	int i;
+	char *rest_memorie;
 
 	i = 0;
-	while (buf[i] != '\0')
-	{
-		if (buf[i] == '\n')
-			return (i);
+
+	while (line[i] != '\n' && line[i] != '\0')
 		i++;
+	if (line[i] == '\n')
+	{
+		free(rest_memorie);
+		rest_memorie = NULL;
 	}
-	return (-1);
+	line[i + 1] = '\0';
+	return (rest_memorie);
 }
 
 char	*get_next_line(const int fd)
 {
-	char		*line;
-	char		*buf;
+	char			*line;
+	char			*buf;
 	static char		*remainder;
-	size_t		len;
 
-	line = NULL;	
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	remainder = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf || !remainder)
-	{
-		free(buf);
-		free(remainder);
+	if (!buf)
 		return (NULL);
-	}
 	line = line_break(fd, buf, remainder);
-	return (line);
+	free(buf);
+	if (!line)
+		return (line);
+	remainder = ft_split_line(line);
+	return (line);	
 }
 
 #include <fcntl.h>
