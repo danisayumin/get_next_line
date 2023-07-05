@@ -6,14 +6,13 @@
 /*   By: dsayumi- <dsayumi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 19:07:53 by dsayumi-          #+#    #+#             */
-/*   Updated: 2023/06/15 22:17:42 by dsayumi-         ###   ########.fr       */
+/*   Updated: 2023/07/04 21:48:05 by dsayumi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include	"get_next_line.h"
 
 static char	*line_break(int fd, char *buf, char *remainder);
-static char	find_break_line(char *buf);
 char	*get_next_line(const int fd);
 
 static char	*line_break(int fd, char *buf, char *remainder)
@@ -40,16 +39,17 @@ static char	*line_break(int fd, char *buf, char *remainder)
 	// return (buf);
 	while (1)
 	{
+		
 		bytes = read(fd, buf, BUFFER_SIZE);
 		if (bytes == -1)
 			return (NULL);
 		else if (bytes == 0)
 			break ;
 		buf[bytes] = '\0';
-		if (!buf)
-			buf = ft_strdup("");
+		if (!remainder)
+			remainder = ft_strdup("");
 		temp = buf;
-		buf = ft_strjoin(buf, remainder);
+		buf = ft_strjoin(remainder, buf);
 		free(temp);
 		if (ft_strchr(buf, '\n'))
 			break ;
@@ -59,19 +59,27 @@ static char	*line_break(int fd, char *buf, char *remainder)
 
 static char	*ft_split_line(char *line)
 {
-	int i;
-	char *rest_memorie;
+	int		i;
+	int		j;
+	char	*rest_memorie;
 
 	i = 0;
-
+	j = 0;
+	rest_memorie = NULL;
 	while (line[i] != '\n' && line[i] != '\0')
 		i++;
-	if (line[i] == '\n')
-	{
-		free(rest_memorie);
-		rest_memorie = NULL;
-	}
-	line[i + 1] = '\0';
+	i++;
+	rest_memorie = malloc(i + 1);
+	while (line[i])
+		rest_memorie[j++] = line[i++];
+	rest_memorie[j + 1] = '\0';
+	// if (line[0] == '\0')
+	// {
+	// 	free(rest_memorie);
+	// 	rest_memorie = NULL;
+	// }
+
+	line[i - j] = '\0';
 	return (rest_memorie);
 }
 
@@ -87,11 +95,10 @@ char	*get_next_line(const int fd)
 	if (!buf)
 		return (NULL);
 	line = line_break(fd, buf, remainder);
-	free(buf);
 	if (!line)
 		return (line);
 	remainder = ft_split_line(line);
-	return (line);	
+	return (line);
 }
 
 #include <fcntl.h>
@@ -104,7 +111,7 @@ int main()
 
     fd = open("test.txt", O_RDONLY);
 
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		line = get_next_line(fd);
 		printf("%s\n", line);
