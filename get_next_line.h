@@ -6,7 +6,7 @@
 /*   By: dsayumi- <dsayumi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 19:04:29 by dsayumi-          #+#    #+#             */
-/*   Updated: 2023/07/08 23:27:31 by dsayumi-         ###   ########.fr       */
+/*   Updated: 2023/07/09 01:48:43 by dsayumi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,6 @@ char		*ft_substr(char const *s, unsigned int start, size_t len);
 size_t		ft_strlcpy(char *dest, const char *src, size_t size);
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 1000000
 # endif 
 #endif
