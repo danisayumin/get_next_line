@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dsayumi- <dsayumi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 19:07:53 by dsayumi-          #+#    #+#             */
-/*   Updated: 2023/07/10 21:11:29 by dsayumi-         ###   ########.fr       */
+/*   Updated: 2023/07/10 20:43:59 by dsayumi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,17 +83,17 @@ char	*get_next_line(const int fd)
 {
 	char			*line;
 	char			*buf;
-	static char		*remainder;
+	static char		*remainder[1024];
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0))
 		return (NULL);
 	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (NULL);
-	line = line_break(fd, buf, remainder);
+	line = line_break(fd, buf, remainder[fd]);
 	free(buf);
 	if (line == NULL)
 		return (line);
-	remainder = ft_split_line(line);
+	remainder[fd] = ft_split_line(line);
 	return (line);
 }
